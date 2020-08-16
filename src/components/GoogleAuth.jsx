@@ -2,7 +2,9 @@ import React from 'react';
 
 class GoogleAuth extends React.Component{
     state={
-        isSignedIn:null
+        isSignedIn:null,
+        userName:null,
+        userProfileImgUrl:null,
     }
     componentDidMount(){
         window.gapi.load('client:auth2',()=>{
@@ -13,11 +15,16 @@ class GoogleAuth extends React.Component{
                 clientId:
                     '1087217222329-u2qejiic5mk9c7up9q2844ievgsmvvb8.apps.googleusercontent.com',
                 scope:
-                    'email'
+                    'profile',
             }).then(()=>{
                 this.auth = window.gapi.auth2.getAuthInstance();
-                this.setState({isSignedIn:this.auth.isSignedIn.get()})
+                this.setState({
+                    isSignedIn:this.auth.isSignedIn.get(),
+                    userName:this.auth.currentUser.get().getBasicProfile().getName(),
+                    userProfileImgUrl:this.auth.currentUser.get().getBasicProfile().getImageUrl()
+                })
                 this.auth.isSignedIn.listen(this.onAuthChange);
+                console.log(this.auth.currentUser.get().getBasicProfile().getImageUrl());
             })
         })
     }
@@ -34,9 +41,14 @@ class GoogleAuth extends React.Component{
         if(this.state.isSignedIn === null){
             return <div>I dont know if we are signed in</div>
         } else if (this.state.isSignedIn){
-            return <button onClick={this.onSignOutClick} className="ui red google button">
+            return <>
+            <h2>            
+                <img style={{width:'40px'}} src={this.state.userProfileImgUrl} alt={this.state.userProfileImgUrl}/>
+                Hello {this.state.userName} 
+            </h2>
+            <button onClick={this.onSignOutClick} className="ui red google button">
                 <i className="google icon"/>Sign Out
-            </button>
+            </button></>
         } else{
             return <button onClick={this.onSignInClick} className="ui red google button">
                 <i className="google icon"/>Sign In With Google
