@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { connect } from 'react-redux';
+import {signIn,signOut} from '../actions'
 class GoogleAuth extends React.Component{
     state={
         isSignedIn:null,
@@ -65,6 +66,9 @@ class GoogleAuth extends React.Component{
         )
     }
 }
-export default GoogleAuth;
+export default connect(
+    null,
+    {signIn,signOut})
+    (GoogleAuth);
 
 //1087217222329-u2qejiic5mk9c7up9q2844ievgsmvvb8.apps.googleusercontent.com
