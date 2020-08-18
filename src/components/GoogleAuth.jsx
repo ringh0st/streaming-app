@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { signIn, signOut } from '../actions'
 class GoogleAuth extends React.Component {
-    state = {
-        isSignedIn: null,
-        userName: null,
-        userProfileImgUrl: null,
-    }
+    // state = {
+    //     // isSignedIn: null,
+    //     userName: null,
+    //     userProfileImgUrl: null,
+    // }
     componentDidMount() {
         window.gapi.load('client:auth2', () => {
 
@@ -19,11 +19,12 @@ class GoogleAuth extends React.Component {
                     'profile',
             }).then(() => {
                 this.auth = window.gapi.auth2.getAuthInstance();
-                this.setState({
-                    isSignedIn: this.auth.isSignedIn.get(),
-                })
+                // this.setState({
+                //     isSignedIn: this.auth.isSignedIn.get(),
+                // })
+                this.onAuthChange(this.auth.isSignedIn.get())
                 this.auth.isSignedIn.listen(this.onAuthChange);
-                console.log(this.auth.currentUser.get().getBasicProfile());
+                // console.log(this.auth.currentUser.get().getBasicProfile());
             })
         })
     }
@@ -37,20 +38,20 @@ class GoogleAuth extends React.Component {
     }
     onSignInClick = () => {
         this.auth.signIn()
-        this.setState({
-            userName: this.auth.currentUser.get().getBasicProfile().getName(),
-            userProfileImgUrl: this.auth.currentUser.get().getBasicProfile().getImageUrl()
-        })
+        // this.setState({
+        //     userName: this.auth.currentUser.get().getBasicProfile().getName(),
+        //     userProfileImgUrl: this.auth.currentUser.get().getBasicProfile().getImageUrl()
+        // })
     }
     onSignOutClick = () => {
         this.auth.signOut()
     }
     renderAuthButton() {
-        if (this.state.isSignedIn === null) {
-            return <div>I dont know if we are signed in</div>
-        } else if (this.state.isSignedIn) {
+        if (this.props.isSignedIn === null) {
+            return null;
+        } else if (this.props.isSignedIn) {
             return <>
-                <div className="ui card">
+                {/* <div className="ui card">
                     <div className="image">
                         <img style={{ width: '40px' }} src={this.state.userProfileImgUrl} alt={this.state.userProfileImgUrl} />
                     </div>
@@ -58,7 +59,7 @@ class GoogleAuth extends React.Component {
                         Hello {this.state.userName}
 
                     </div>
-                </div>
+                </div> */}
                 <button onClick={this.onSignOutClick} className="ui red google button">
                     <i className="google icon" />Sign Out
             </button></>
@@ -77,8 +78,14 @@ class GoogleAuth extends React.Component {
         )
     }
 }
+
+const myStateToProps = (state)=>{
+    return{
+        isSignedIn:state.auth.isSignedIn
+    }
+}
 export default connect(
-    null,
+    myStateToProps,
     { signIn, signOut })
     (GoogleAuth);
 
