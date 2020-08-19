@@ -9,7 +9,6 @@ class GoogleAuth extends React.Component {
     // }
     componentDidMount() {
         window.gapi.load('client:auth2', () => {
-
             //load is followed by a callback function. 
             //init doesnt need CB function cause its a promise followed by function then()
             window.gapi.client.init({
