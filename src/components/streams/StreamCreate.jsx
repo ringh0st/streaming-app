@@ -2,10 +2,13 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 class StreamCreate extends React.Component{
-    renderInput(formProps){
-        console.log(formProps);
+    renderInput({input}){
         return(
-            <input/>
+            <input {...input}
+            // onChange={formProps.input.onChange} 
+            // value={formProps.input.value}
+            // instead we should destruct input 
+            />
         )
     }
     render(){
